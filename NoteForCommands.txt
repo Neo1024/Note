@@ -1,0 +1,231 @@
+1. 启动Apache ActiveMQ： bin/activemq start
+
+2. ctr+k和ctr+shift+k跳转到下一个或上一个选中的内容
+   ctr+L定位到某一行
+   ctr+H全局搜索
+
+3. Command forLinux：
+   ls -a 显示当前目录下的所有文件
+   pwd 显示当前路径
+   cd .. 返回上一级目录 
+   cd 返回主目录
+   mikdir 创建文件夹
+
+4. git
+从代码库pull 代码覆盖本地代码：git pull origin master； 
+查看git 状态： git status；
+将改动提交到本地缓存：git add .
+commit 代码(将缓存中的改动提交到本地代码库)：  git commit -m "CREATE-121:"
+push 代码（将本地代码库推到远程库中）： git push origin master 
+忽略本地改动： git checkout .    PS：若想忽略某一特定的文件则跟文件名。
+
+5. 解决Tomcat 当掉的问题：
+先查看进程ID 的命令：ps -aux | grep tomcat
+然后Kill ：kill -9 XXXX
+
+6. 生成git ssh key：
+
+设置Git的user name和email：
+
+$ git config --global user.name "xuhaiyan"
+
+$ git config --global user.email "haiyan.xu.vip@gmail.com"
+
+生成SSH密钥过程：
+（1）.查看是否已经有了ssh密钥：cd ~/.ssh
+如果没有密钥则不会有此文件夹，有则备份删除
+（2）.生存密钥：
+
+    $ ssh-keygen -t rsa -C “haiyan.xu.vip@gmail.com”
+    按3个回车，密码为空,也可以设置passphrase，查看私钥时需要输入该密码。
+
+修改passphrase或者生成passphrase： ssh-keygen -p
+若已存在passphrase则需要输入原密码
+
+
+    Your identification has been saved in /home/tekkub/.ssh/id_rsa.
+    Your public key has been saved in /home/tekkub/.ssh/id_rsa.pub.
+    The key fingerprint is:
+    ………………
+
+
+最后得到了两个文件：id_rsa和id_rsa.pub
+
+
+（3）.添加密钥到ssh-agent：ssh-add id_rsa
+这步需要之前输入过的密码。添加了这一步之后，在使用ssh连接登录时不用每次都输入私钥的passphrase，只需要输入一次即可，
+之后ssh-agent进程会将私钥保存在内存中，有效期为此次login session的持续时间。
+
+（4）.在github上添加ssh密钥，这要添加的是“id_rsa.pub”里面的公钥，在网站上添加ssh，使用gedit 打开id_rsa.pub将其中的密钥复制到网站上。
+也可以使用xclip程序：xclip -sel clip ～/.ssh/id_rsa.pub
+该命令从终端命令行中将公钥内容复制到剪贴板中
+
+7. 为本地git库设置远程连接的对象：
+git remote： 查看当前的远程连接
+git remote remove origin： 移除当前的远程连接origin
+git remote add origin XXXXX（git库的HTTPS或SSH连接）： 添加远程连接origin
+若已存在远程连接对象，想要对其进行修改，例如从ssh更换为https或者https换为ssh
+git remote set-url origin https://github.com/USERNAME/OTHERREPOSITORY.git
+
+8. 关于本地分支
+git branch： 查看本地分支（带*号 的表示当前选中分支）
+git checkout nameOfBranch： 切换到指定的branch
+git pull origin master：master：从远程库的master分支pull代码到本地的master分支（若本地不存在分支则新建）（PS：冒号前后不能加空格）
+git pull origin dev：dev：从远程库的dev分支pull代码到本地的dev分支（若本地不存在分支则新建）
+
+
+9. 设置java环境变量
+在～./bashrc 中添加
+JAVA_HOME=/opt/java/jdk1.8.0_40/
+CLASSPATH=$JAVA_HOME/lib/tools.jar
+PATH=$JAVA_HOME/bin:$PATH
+export JAVA_HOME CLASSPATH PATH
+
+然后执行source ./bashrc命令
+
+10. 解压和压缩命令：
+tar
+
+-c: 建立压缩档案
+-x：解压
+-t：查看内容
+-r：向压缩归档文件末尾追加文件
+-u：更新原压缩包中的文件
+
+这五个是独立的命令，压缩解压都要用到其中一个，可以和别的命令连用但只能用其中一个。下面的参数是根据需要在压缩或解压档案时可选的。
+
+-z：有gzip属性的
+-j：有bz2属性的
+-Z：有compress属性的
+-v：显示所有过程
+-O：将文件解开到标准输出
+
+下面的参数-f是必须的
+
+-f: 使用档案名字，切记，这个参数是最后一个参数，后面只能接档案名。
+
+压缩
+
+tar –cvf jpg.tar *.jpg //将目录里所有jpg文件打包成tar.jpg
+
+tar –czf jpg.tar.gz *.jpg   //将目录里所有jpg文件打包成jpg.tar后，并且将其用gzip压缩，生成一个gzip压缩过的包，命名为jpg.tar.gz
+
+tar –cjf jpg.tar.bz2 *.jpg //将目录里所有jpg文件打包成jpg.tar后，并且将其用bzip2压缩，生成一个bzip2压缩过的包，命名为jpg.tar.bz2
+
+tar –cZf jpg.tar.Z *.jpg   //将目录里所有jpg文件打包成jpg.tar后，并且将其用compress压缩，生成一个umcompress压缩过的包，命名为jpg.tar.Z
+
+rar a jpg.rar *.jpg //rar格式的压缩，需要先下载rar for linux
+
+zip jpg.zip *.jpg //zip格式的压缩，需要先下载zip for linux
+
+解压
+
+tar –xvf file.tar //解压 tar包
+
+tar -xzvf file.tar.gz //解压tar.gz
+
+tar -xjvf file.tar.bz2   //解压 tar.bz2
+
+tar –xZvf file.tar.Z   //解压tar.Z
+
+unrar e file.rar //解压rar
+
+unzip file.zip //解压zip
+
+总结
+
+（1）、*.tar 用 tar –xvf 解压
+
+（2）、*.gz 用 gzip -d或者gunzip 解压
+
+（3）、*.tar.gz和*.tgz 用 tar –xzf 解压
+
+（4）、*.bz2 用 bzip2 -d或者用bunzip2 解压
+
+（5）、*.tar.bz2用tar –xjf 解压
+
+（6）、*.Z 用 uncompress 解压
+
+（7）、*.tar.Z 用tar –xZf 解压
+
+（8）、*.rar 用 unrar e解压
+
+（9）、*.zip 用 unzip 解压
+
+
+10. linux重名名文件：
+（1）、对于单个文件可以简单地使用mv命令来实现重命名的功能，mv OldName NewName。
+（2）、也可以使用Linux的rename命令来重命名，该命令可以实现批量重命名（支持通配符，rename from to file，该命令有三个参数from（要被替换的格式），to（将要使用的格式），file（文件名）
+
+    SYNOPSIS（摘要）
+
+        rename from to file
+
+    DESCRIPTION
+
+        rename will rename the specified files by replacing the first occurrence of from in their name by to.
+
+ ?    可替代单个字符
+
+ *    可替代多个字符
+
+说到Debian一系的操作系统，比如Ubuntu，这个命令这样使用是不对的，报错，向下面这样的：
+
+Bareword “a” not allowed while “strict subs” in use at (eval 1) line 1.
+
+经过Google之后发现有这样的说法：
+
+    On Debian-based distros it takes a perl expression and a list of files. you need to would need to use:
+    rename ‘s/foo/foox/’ *
+
+这里是一个perl表达式，好理解点说就是综合了前两个参数为1个，这样就只需要2个参数，而非上面所说的3个参数形式。
+
+所以在Ubuntu下执行上面举例的重命名时，命令是这样的：rename ‘s/a/xxx/’ *.txt
+
+11. git reset：
+eg： 
+git 取消已经执行add命令缓存添加到缓冲区的改动：git reset -- [filename]
+
+git reset [--hard|soft|mixed|merge|keep] [<commit>或HEAD] -- [filename]
+若不指定版本则默认为Head，即最近的一次提交；
+若不指定文件名则默认reset所有的文件，若要指定文件名则需要用 -- [filename]分隔；
+
+A). --hard：重设（reset） index和working directory，自从<commit>以来在working directory中的任何改变都被丢弃，并把HEAD指向<commit>。 
+B). --soft：index和working directory中的内容不作任何改变，仅仅把HEAD指向<commit>。这个模式的效果是，执行完毕后，自从<commit>以来的所有改变都会显示在git status的"Changes to be committed"中。
+C). --mixed：仅reset index，但是不reset working directory。这个模式是默认模式，即当不显示告知git reset模式时，会使用mixed模式。这个模式的效果是，working directory中文件的修改都会被保留，不会丢弃，但是也不会被标记成"Changes to be committed"，但是会显示"changes not staded for commit"。
+
+强行将本地代码库推到远程（当出现将不需要的代码已经推到远程时，在本地reset后推到远程代码库覆盖之前commit的改动）：git push origin +master:master
+
+12. apt-get install 安装chrome
+安装稳定版Chrome，在终端输入：sudo apt-get install google-chrome-stable
+安装Beta版Chrome，在终端输入：sudo apt-get install google-chrome-beta
+安装不稳定版Chrome，在终端输入：sudo apt-get install google-chrome-unstable
+
+13. Linux文件夹命令
+新建文件夹： mkdir XXX
+删除文件夹： rmdir XXX 或者rm -rf XXX，r代表递归，f代表强制；
+
+14、vi
+Vi有三种基本工作模式：命令行模式，文本输入模式和末行模式。
+
+命令行模式：
+任何时候，不管用户处于何种模式，只要按一下ESC 键，即可使 vi 进入命令行模式，当在 shell 环境下输入 vi 命令启动 vi 编辑器时，也是处于该模式。
+
+文本输入模式：
+在命令模式下输入插入命令 i，附加命令 a，打开命令 o，修改命令 c，取代命令 r ，或替换命令 s 都可以进入文本输入模式 在该模式下 用户输入的任何字符都被 vi 当做文件内容保存起来，若想回到命令模式下，按ESC 键即可。
+
+末行模式：
+在命令模式下用户按 : 键即可进入末行模式下，退出vi时需要进入末行模式，在末行模式下使用以下命令退出
+：q   直接退出
+：wq  保存后退出
+：x   同wq
+：q！ 强制退出，不保存内容
+
+15、关于Linux硬链接（Hard Link）和符号链接（Symbolic Link）
+创建指向一个文件的硬链接，该链接文件和target文件具有相同的节点索引（inode index），Linux文件中每个文件都会有对应的文件索引号，使用ls -li命令查看，可以发现源文件和链接文件的索引相同，说明系统将二者当做了相同的文件，且两个文件上所挂载的链接数都会增加为2（假设源文件之前没有被创建其它链接文件），删除元文件或该链接文件中的任意一个都不会影响另一个文件，即另一个文件依然能正常访问，只有当二者都被删除时，文件才真正被删除。
+
+创建指向一个源文件的符号链接（软链接），该软链接文件与target文件具有不同的节点索引，说明系统把该软链接和源文件当做了不同的文件，源文件上挂载的链接数不会增加，该软链接类似于windows下的快捷方式，存储了源文件的信息，而未存储源文件的数据，删除软链接不会影响源文件，删除源文件，该软链接失效。
+
+对链接文件的复制（无论软硬链接），得到的都是该链接文件指向的源文件的一个副本，并不会得到链接文件本身的复制，该副本就有新的索引，与源文件或链接文件之间没有任何联系。若需建立指向同一个文件的多个链接，直接创建新链接即可。
+
+ln target linkName命令可以创建指向target的硬链接，如需创建软链接，需添加 -s 参数；此外还可以使用cp -l file1 file2来创建硬链接，cp -s file1 file2来创建符号链接

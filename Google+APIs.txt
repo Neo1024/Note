@@ -1,0 +1,19 @@
+QAuth2.0 Authentication for Google+：
+https://developers.google.com/identity/protocols/OAuth2
+
+/************************************************/
+词汇：
+
+embed
+[英][ɪm'bed][美][ɛmˈbɛd]
+vt.&vi.把…嵌入; 栽种; 深留（记忆中）; 
+
+anticipate
+[英][ænˈtɪsɪpeɪt][美][ænˈtɪsəˌpet]
+vt.预见; 预料; 预感; 先于…行动; 
+vi.预测; 过早地提出; 过早地考虑（或说、做）一件事; （在口头或用文字）预言; 
+
+capability
+[英][ˌkeɪpəˈbɪləti][美][ˌkeɪpə'bɪləti]
+n.性能; 容量; 才能，能力; 生产率; 
+/************************************************/

@@ -1,0 +1,53 @@
+1 mysql 启动/关闭/查看状态： sudo service mysql start/stop/status
+
+2 mysql修改默认字符集问题：
+修改my.cnf文件-->
+在[client] 下添加
+default-character-set=utf8
+
+在[mysqld] 下添加
+character-set-server=utf8
+init_connect='SET collation_connection = utf8_unicode_ci'
+init_connect='SET NAMES utf8'
+
+3 mysql快速删除数据库表中所有数据并重置auto_increment的方法：
+TRUNCATE TABLE table_name
+
+4 mysqldump备份与还原
+
+mysql dump备份命令在linux shell下执行，而不是在mysql的shell下执行
+
+备份数据库（不包含表中数据）mysqldump -u root -p --no-data --databases r5v0g729odu1n3u4 > /home/lixin/MyFiles/sqls/backup_no_data.sql
+备份数据库（包含表中数据）mysqldump -u root -p --databases r5v0g729odu1n3u4 > /home/lixin/MyFiles/sqls/backup_no_data.sql
+
+mysqldump命令选项说明：
+--no-create-db：不生成创建数据库语句；
+--no-data：不备份数据库表中的内容，仅备份结构；
+-d: 同样表示只导出结构，不导出数据；
+--ignore-table: 忽略指定表；
+
+还原数据库：
+使用mysqldunp命令备份的sql脚本中，还原时也使用备份的表名，若想还原数据到新表中，需要修改sql语句中create database和use语句中的数据库名
+在linux的shell下：
+mysql -h localhost -u root -p < /home/lixin/MyFiles/sqls/backup_with_data.sql（若sql中包含创建数据库语句，则"<"前无需指定数据库名）
+mysql -h localhost -u root -p test_backup < /home/lixin/MyFiles/sqls/backup_with_data.sql;
+
+在mysqlshell下：
+source /home/lixin/MyFiles/sqls/backup_with_data.sql
+
+5、使用apt-get安装mysql
+apt-get install mysql-server-x.x
+
+6、数据库隔离级别
+read uncommitted，read committed（non-repeatable read），repeatable read，serializable
+--->脏读，不可重复读，幻读
+
+幻影读(phantom read)
+在事务执行过程中，当两个完全相同的查询语句执行得到不同的结果集。这种现象称为“幻影读(phantom read)”。当事务没有获取范围锁的情况下执行SELECT ... WHERE操作可能会发生“幻影读(phantom read)”。
+
+不可重复读(non-repeatable read)[编辑]
+在一次事务中，当一行数据获取两遍得到不同的结果表示发生了“不可重复读(non-repeatable read)”.
+在基于锁的并发控制中“不可重复读(non-repeatable read)”现象发生在当执行SELECT 操作时没有获得读锁(read locks)或者SELECT操作执行完后马上释放了读锁； 多版本并发控制中当没有要求一个提交冲突的事务回滚也会发生“不可重复读(non-repeatable read)”现象。
+
+脏读(Dirty reads (Uncommitted Dependency))[编辑]
+当一个事务允许读取另外一个事务修改但未提交的数据时，就可能发生脏读(dirty reads)。

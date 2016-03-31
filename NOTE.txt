@@ -1,0 +1,170 @@
+1. HTML5 增加了一项新功能是 自定义数据属性 ，也就是 data-* 自定义属性。在HTML5中我们可以使用以 data- 为前缀来设置我们需要的自定义属性，来进行一些数据的存放，可以在任意元素标签下设置该属性。并且可以在JS代码中将其取出，如：var readed = $(this).parent('td').parent('tr').data('readed');或是设置其值：$(this).parent('td').parent('tr').data("readed", true);
+
+2. 启动Apache ActiveMQ： bin/activemq start
+
+3. ctr+k和ctr+shift+k跳转到下一个或上一个选中的内容
+   ctr+L定位到某一行
+
+4. fastjson的主要API：
+  package com.alibaba.fastjson;
+  public abstract class JSON {
+        public static final String toJSONString(Object object);
+        public static final <T> T parseObject(String text, Class<T> clazz, 		Feature... features);
+  }
+
+序列化：
+
+  String jsonString = JSON.toJSONString(obj);
+
+反序列化：
+
+  VO vo = JSON.parseObject("...", VO.class);
+
+泛型反序列化：
+
+  import com.alibaba.fastjson.TypeReference;
+
+  List<VO> list = JSON.parseObject("...", new TypeReference<List<VO>>() {});
+
+5. ActiveMQ 使用初步：
+   发送消息：
+	// Getting JMS connection from the server
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("admin", "admin", url);
+        Connection connection = connectionFactory.createConnection();
+
+        // Create a Session
+        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+        // Create the destination (Topic or Queue)
+        Destination destination = session.createQueue(channel);
+
+        // Create a MessageProducer from the Session to the Topic or Queue
+        MessageProducer producer = session.createProducer(destination);
+        producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+
+        //start
+        connection.start();
+        //message to be sent
+        TextMessage message = session.createTextMessage(msg);
+
+        // Tell the producer to send the message
+        logger.info("Sent message : " + message.getText() + "to channle: " + channel);
+        producer.send(message);
+
+        // Clean up
+        session.close();
+        connection.close();
+
+  接收消息：
+	// Getting JMS connection from the server
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory("system", "manager", url);
+        Connection connection = connectionFactory.createConnection();
+
+        // need to setClientID value, any string value you wish
+        connection.setClientID(channel);
+
+        Session session = connection.createSession(false,
+                Session.AUTO_ACKNOWLEDGE);
+
+        Queue queue = session.createQueue(channel);
+
+        MessageConsumer consumer = session.createConsumer(queue);
+
+        connection.start();
+
+        Message msg = consumer.receive();
+        String message = ((TextMessage) msg).getText();
+        if (msg instanceof TextMessage) {
+            logger.info("rececived message: " + message + "from channel" + channel);
+        }
+        // Clean up
+        session.close();
+        connection.close();
+
+        return message;
+
+6. JAVA 的Collection 类的shuffle（）方法：
+Collections.shuffle(list);
+该方法将一个list 作为参数传入，然后将该list 中的顺序打乱。
+
+7.  关于List 的subList（）方法；
+    JDK中，List接口有一个实例方法List<E> subList(int fromIndex, int toIndex)，其作用是返回一个以fromIndex为起始索引（包含），以toIndex为终止索引（不包含）的子列表（List）。
+    但值得注意的是，返回的这个子列表的幕后其实还是原列表；也就是说，修改这个子列表，将导致原列表也发生改变；反之亦然。 
+若想在操作新的List 的时候不影响原List ，则可以尝试以下方法：
+List<Object> tempList = new ArrayList<Object>(lists.subList(2, lists.size())); 
+这样就会生成一个新的List
+API 文档：
+   /**
+     * Returns a view of the portion of this list between the specified
+     * <tt>fromIndex</tt>, inclusive, and <tt>toIndex</tt>, exclusive.  (If
+     * <tt>fromIndex</tt> and <tt>toIndex</tt> are equal, the returned list is
+     * empty.)  The returned list is backed by this list, so non-structural
+     * changes in the returned list are reflected in this list, and vice-versa.
+     * The returned list supports all of the optional list operations supported
+     * by this list.<p>
+
+8.  JAVA 中ArrayList 的一些问题：
+ArrayList()：构造一个初始容量为 10 的空列表；
+ArrayList(Collection<? extends E> c)：构造一个包含指定 collection 的元素的列表，这些元素是按照该 collection 的迭代器返回它们的顺序排列的。
+ArrayList(int initialCapacity)：构造一个具有指定初始容量的空列表。
+
+第一个构造函数是没有默认构建了一个初始容量10的空列表，第二个构造函数是制定collection元素的列表，第三个构造函数是由用户指定构造的列表初始化容量多少，如果使用第一个构造函数则表示默认调用该参数为initialCapacity=10来构造一个列表对象。
+
+
+9.  解决java compiler level does not match the version of the installed java project facet:
+在资源管理器下，找到项目所在的目录，在.settings子目录里面，用文本编辑器打开org.eclipse.wst.common.project.facet.core.xml配置文件,修改java的version让它与项目的编译器版本设置保持一致即可；
+要查看项目的编译器版本设置，在Eclipse环境中，鼠标右键选择项目，点击Properties，选择Java Compiler，可以在窗口右边看到编译器版本
+
+10. 关于java 枚举变量：
+
+
+枚举类型是JDK5.0的新特征。Sun引进了一个全新的关键字enum来定义一个枚举类。下面就是一个典型枚举类型的定义：
+
+Java代码：
+
+    public enum Color{  
+    RED，BLUE，BLACK，YELLOW，GREEN  
+    } 
+
+11. 获取android 程序的证书指纹：
+cd .android/
+keytool -list -keystore debug.keystore
+
+输出：
+Enter keystore password:  
+
+Keystore type: JKS
+Keystore provider: SUN
+
+Your keystore contains 1 entry
+
+androiddebugkey, Jun 2, 2015, PrivateKeyEntry, 
+Certificate fingerprint (SHA1): 29:81:F7:5C:B9:FE:30:9F:9F:7E:2C:5E:9D:01:38:42:7B:0C:F7:DF
+
+
+12. HttpURLConnection；
+	/**
+	 * 1. create a URL instance based on a real url.
+	 * 2. create a HttpURLConnection via URL.openConnection();
+	 * 3. set setting params for the connection
+	 * 4. use connect() method to connect or use getOutputStream() method which also calls connect();
+	 * 5. use stream or writer to write data into the HttpRequest body and flush();
+	 * 6. getInputStream() send the request and get the reply stream
+	 * 
+	 * @param params
+	 * @param url
+	 * @return
+	 */
+
+
+13. LD_PRELOAD=/opt/sublime_text/libsublime-imfix.so /opt/sublime_text/sublime_text
+
+14. 当@PathVariable遇上中文和点
+Spring MVC从3.0开始支持REST，而主要就是通过@PathVariable来处理请求参数和路径的映射。由于考虑到SEO的缘故，很多人喜欢把新闻的名称作为路径中的一部分去处理，这时候中文的名称就会遇到问题，没办法映射，这个是因为编码问题，只要到TOMCAT/conf下找到server.xml，添加URIEncoding="UTF-8"进行URL编码设置就可以解决中文问题。另外经常遇到路径中有点"."，而点是特殊字符，比如.html, .do等等，所以SpringMVC默认是把点后面的信息当作文件后缀，这时候我们就要修改这个默认值。另外，这时候如果只设置这个，请求可以传递到对于的controller，但传过去的数据会有问题，只会传最后一个点前面的数据，除非你在最后加上“/”，比如/news/测试.点/  这样就会把“测试.点”当作整体，不然只会得到“测试”。这时候我们可以这样设置@RequestMapping("/news/{title:.*}")，这样就一切ok啦。
+
+15. sublime text 3在linux下的配置文件的位置
+～/.config/sublime text 3
+该文件夹下保存了sublime text相关的配置
+
+
+16. javascript调用对象时，一定要注意在调用时该对象是否已经加载！！！调用时是否已加载！！！调用时是否已经加载！！！

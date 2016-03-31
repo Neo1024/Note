@@ -1,0 +1,69 @@
+1. HTML5 增加了一项新功能是 自定义数据属性 ，也就是 data-* 自定义属性。在HTML5中我们可以使用以 data- 为前缀来设置我们需要的自定义属性，来进行一些数据的存放，可以在任意元素标签下设置该属性。并且可以在JS代码中将其取出，如：var readed = $(this).parent('td').parent('tr').data('readed');或是设置其值：$(this).parent('td').parent('tr').data("readed", true);
+定义和用法
+data-* 属性用于存储页面或应用程序的私有自定义数据。
+data-* 属性赋予我们在所有 HTML 元素上嵌入自定义 data 属性的能力。
+存储的（自定义）数据能够被页面的 JavaScript 中利用，以创建更好的用户体验（不进行 Ajax 调用或服务器端数据库查询）。
+data-* 属性包括两部分：
+    属性名不应该包含任何大写字母，并且在前缀 "data-" 之后必须有至少一个字符
+    属性值可以是任意字符串
+
+
+2. 将js中的声明的变量封装到表单数组中，在后台以数组方式取出：
+为Form表单声明ID或class，然后在Js中通过选择器选中Form，然后使用append方法为其添加<Input/>标签。
+
+3. 在JS中可以使用submit（）方法为表单添加提交事件，$(".XXX").submit();
+
+eg for 2,3(点击某一按钮时，遍历checkbox，将选中的checkbox 的值一一取出，添加到form 的input中):
+$(".btn-green").click(
+			function() {
+				var num = 0;
+				var receiverId;
+
+				$("input:checked.checkselected").each(
+						function() {
+							receiverId = $(this).val();
+							$("#inboxmessageform").append('<input name="receiverIds[]" type="hidden" value="'+ receiverId +'"/>');
+							num++;
+						});
+						
+				if (num > 0) {
+					$("#inboxmessageform").submit();
+				}
+			});
+
+});
+在后台可以用SpringMVC 的@requestParam 接收表单中封装的数组：
+@RequestParam(value = "receiverIds[]", required = false) long[] receiverIds
+
+4. 在JQuery 中为选定的东西添加内容（标签之间显示的内容）
+$('.quiz-number').load("${ctx}/quiz/countUndeletedQuiz", function(data) {
+                        $('.quiz-number').html('私习(' + data + ')');
+                    });
+
+也可以为其选中的标签的属性赋值：
+$('.inbox-message-count').load("${ctx}/inbox/countUnread", function (data) {
+                         $('.inbox-message-count').show();
+                         $('.inbox-message-count').attr('title', '你有' + data + '条未读消息');
+                    });
+
+5. javascript选择器通过多个class来选定元素
+$('.class1, .class2'): 表示选择所有class为class1或者class2的元素(中间用逗号分隔)；
+$('.class1.class2'): 表示选择同时具有class1和class2属性的元素（中间没有空格）；
+$('.class1 .class2'): 表示选择具有class1属性元素下的具有class2属性的子元素；
+
+6. 关于js中引号的问题
+js中的单引号和双引号没有区别，但是更倾向于使用单引号，因为HTML中的属性等使用双引号，当需要在js中添加html代码时方便字符串的拼接。
+
+json数据定义的格式与javascript中定义对象的格式一致，但是在定义json对象时，按照json标准，需要给key值加上双引号以满足不同平台之间的通用性要求；
+而在定义javascript对象时，按照js语法，key值无需添加双引号；
+所以按照规范，在定义json对象时需要为key加上双引号，在定义javascript对象时无需添加双引号。
+
+
+
+
+
+
+
+
+
+

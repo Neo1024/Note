@@ -1,0 +1,80 @@
+1. There is no getter for property named 'id' in 'class java.lang.Integer'错误
+ 问题分析：Mybatis默认采用ONGL解析参数，所以会自动采用对象树的形式取Iinteger.id值，引起报错。
+ 解决方法：  public Note findNoteByID(@Param(value="id") String id);说明参数值。
+
+2. MyBatis的Mapper中传递多个参数，用@Param注解为参数命名，eg：
+public Quiz findOne(@Param("id")long id, @Param("type")int type)
+
+3. MyBatis 中查询时，返回值无法转换为POJO 类的枚举类型，可以使用TypeHandler：
+<result property="status" column="status" typeHandler="org.apache.ibatis.type.EnumOrdinalTypeHandler"/>
+
+
+	<insert id="save" parameterType="Quiz" useGeneratedKeys="true"
+		keyProperty="id">
+		INSERT INTO 
+			qz_apply_quiz(
+				title, 
+				description, 
+				image,
+				user_id, 
+				quiz_id, 
+				status) 
+		VALUES(
+				#{title}, 
+				#{description}, 
+				#{image},
+				#{user.id}, 
+				#{quizId}, 
+				#{status, typeHandler=org.apache.ibatis.type.EnumOrdinalTypeHandler})
+	</insert>
+
+4. MyBatis级联查询使用ResultMap封装对象时的一个小问题： 
+在ResultMap中使用collection时若sql语句的外连接没有关联到相关的记录，那么该collection为空，即MyBatis封装查询结果后的对象的该collection对应的集合List为空，调用size方法返回0,；但是若在ResultMap中设置被连接表的collection的作为级联查询条件字段result时，若将其column属性指定为主表的中的字段名，MyBatis会在collection对应的集合List中创建一个除了该级联字段以外其他字段都为空的对象，调用集合的size（）方法返回1.
+eg：
+Mapper.xml文件:
+	<select id="test" resultMap="testMapping">
+		SELECT 
+			q.id, 
+            q.title, 
+            a.id AS answer_id, 
+            a.title AS answer_title, 
+            a.question_id 
+		FROM 
+			qz_private_question q
+		LEFT OUTER JOIN
+			qz_private_answer a ON(q.id=a.question_id)
+		WHERE 
+			q.id = 199
+	</select>
+
+	<resultMap id="testMapping" type="Question">
+			<id property="id" column="question_id"/>
+			<result property="title" column="title" />
+			<collection property="answers" ofType="Answer">
+				<id property="id" column="answer_id"/>
+				<result property="title column="answer_title" />
+				<result property="questionId" column="id"/>
+			</collection>
+	</resultMap>
+
+Mapper.java文件：
+public Question test();
+
+JUnit Test文件：
+	@Test
+	public void testMapping() {
+		Question q = privateQuizMapper.test();
+		System.out.println(q.getAnswers().size());
+		for (Answer a : q.getAnswers()) {
+			System.out.println(a.getQuestionId());
+		}
+	}
+输出：1
+199
+
+若将ResultMap中的collection中的：
+<result property="questionId" column="id"/>
+替换为
+<result property="questionId" column="question_id"/>
+
+输出：0

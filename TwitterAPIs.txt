@@ -1,0 +1,360 @@
+Twitter APIs笔记：
+
+1. 获取认证用户的个人信息：
+（文档位置：https://dev.twitter.com/rest/reference/get/account/verify_credentials）
+（用户实体的详细描述：https://dev.twitter.com/overview/api/users）
+
+GET account/verify_credentials
+
+Returns an HTTP 200 OK response code and a representation of the requesting user if authentication was successful; returns a 401 status code and an error message if not. Use this method to test if supplied user credentials are valid.
+
+Request a User’s Email Address：
+
+Requesting a user’s email address requires your application to be whitelisted by Twitter. To request access, please use this form.Once whitelisted, the “Request email addresses from users” checkbox will be available under your app permissions on apps.twitter.com. Privacy Policy URL and Terms of Service URL fields will also be available under settings which are required for email access. If enabled, users will be informed via the oauth/authorize dialog that your app can access their email address.
+
+Note：
+Your app will need to regenerate the user access tokens for previously authenticated users to access their email address.
+
+Resource URL：
+https://api.twitter.com/1.1/account/verify_credentials.json
+
+Resource Information：
+Response formats			JSON
+Requires authentication?		Yes (user context only)
+Rate limited?				Yes
+Requests/15-min window (user auth)	15
+
+Parameters：
+（1）include_entities<optional>：
+The entities node will not be included when set to false.
+
+（2）skip_status<optional>:
+When set to either true, t or 1 statuses will not be included in the returned user object.
+
+（3）include_email<optional>:
+Use of this parameter requires whitelisting.
+When set to true email will be returned in the user objects as a string. If the user does not have an email address on their account, or if the email address is un-verified, null will be returned.
+
+#########################################################################
+Example request URL：
+GET
+https://api.twitter.com/1.1/account/verify_credentials.json
+
+ Example Result
+
+{
+    "contributors_enabled": true,
+    "created_at": "Sat May 09 17:58:22 +0000 2009",
+    "default_profile": false,
+    "default_profile_image": false,
+    "description": "I taught your phone that thing you like.  The Mobile Partner Engineer @Twitter. ",
+    "favourites_count": 588,
+    "follow_request_sent": null,
+    "followers_count": 10625,
+    "following": null,
+    "friends_count": 1181,
+    "geo_enabled": true,
+    "id": 38895958,
+    "id_str": "38895958",
+    "is_translator": false,
+    "lang": "en",
+    "listed_count": 190,
+    "location": "San Francisco",
+    "name": "Sean Cook",
+    "notifications": null,
+    "profile_background_color": "1A1B1F",
+    "profile_background_image_url": "http://a0.twimg.com/profile_background_images/495742332/purty_wood.png",
+    "profile_background_image_url_https": "https://si0.twimg.com/profile_background_images/495742332/purty_wood.png",
+    "profile_background_tile": true,
+    "profile_image_url": "http://a0.twimg.com/profile_images/1751506047/dead_sexy_normal.JPG",
+    "profile_image_url_https": "https://si0.twimg.com/profile_images/1751506047/dead_sexy_normal.JPG",
+    "profile_link_color": "2FC2EF",
+    "profile_sidebar_border_color": "181A1E",
+    "profile_sidebar_fill_color": "252429",
+    "profile_text_color": "666666",
+    "profile_use_background_image": true,
+    "protected": false,
+    "screen_name": "theSeanCook",
+    "show_all_inline_media": true,
+    "status": {
+        "contributors": null,
+        "coordinates": {
+            "coordinates": [
+                -122.45037293,
+                37.76484123
+            ],
+            "type": "Point"
+        },
+        "created_at": "Tue Aug 28 05:44:24 +0000 2012",
+        "favorited": false,
+        "geo": {
+            "coordinates": [
+                37.76484123,
+                -122.45037293
+            ],
+            "type": "Point"
+        },
+        "id": 240323931419062272,
+        "id_str": "240323931419062272",
+        "in_reply_to_screen_name": "messl",
+        "in_reply_to_status_id": 240316959173009410,
+        "in_reply_to_status_id_str": "240316959173009410",
+        "in_reply_to_user_id": 18707866,
+        "in_reply_to_user_id_str": "18707866",
+        "place": {
+            "attributes": {},
+            "bounding_box": {
+                "coordinates": [
+                    [
+                        [
+                            -122.45778216,
+                            37.75932999
+                        ],
+                        [
+                            -122.44248216,
+                            37.75932999
+                        ],
+                        [
+                            -122.44248216,
+                            37.76752899
+                        ],
+                        [
+                            -122.45778216,
+                            37.76752899
+                        ]
+                    ]
+                ],
+                "type": "Polygon"
+            },
+            "country": "United States",
+            "country_code": "US",
+            "full_name": "Ashbury Heights, San Francisco",
+            "id": "866269c983527d5a",
+            "name": "Ashbury Heights",
+            "place_type": "neighborhood",
+            "url": "http://api.twitter.com/1/geo/id/866269c983527d5a.json"
+        },
+        "retweet_count": 0,
+        "retweeted": false,
+        "source": "<a>Twitter for  iPhone</a>",
+        "text": "@messl congrats! So happy for all 3 of you.",
+        "truncated": false
+    },
+    "statuses_count": 2609,
+    "time_zone": "Pacific Time (US & Canada)",
+    "url": null,
+    "utc_offset": -28800,
+    "verified": false
+}
+##########################################################################
+
+
+2. 发送twitter：
+(文档位置：https://dev.twitter.com/rest/reference/post/statuses/update)
+
+POST statuses/update
+
+Updates the authenticating user’s current status, also known as Tweeting.
+
+For each update attempt, the update text is compared with the authenticating user’s recent Tweets. Any attempt that would result in duplication will be blocked, resulting in a 403 error. Therefore, a user cannot submit the same status twice in a row.
+
+While not rate limited by the API a user is limited in the number of Tweets they can create at a time. If the number of updates posted by the user reaches the current allowed limit this method will return an HTTP 403 error.
+
+About Geo
+
+    >Any geo-tagging parameters in the update will be ignored if geo_enabled for the user is false (this is the default setting for all users unless the user has enabled geolocation in their settings)
+
+    >The number of digits passed the decimal separator passed to lat, up to 8, will be tracked so that the lat is returned in a status object it will have the same number of digits after the decimal separator.
+
+    >Please make sure to use to use a decimal point as the separator (and not the decimal comma) for the latitude and the longitude - usage of the decimal comma will cause the geo-tagged portion of the status update to be dropped.
+
+    >For JSON, the response mostly uses conventions described in GeoJSON. Unfortunately, the geo object has coordinates that Twitter renderers are reversed from the GeoJSON specification (GeoJSON specifies a longitude then a latitude, whereas we are currently representing it as a latitude then a longitude. Our JSON renders as: "geo": { "type":"Point", "coordinates":[37.78217, -122.40062] }
+
+    >The coordinates object is replacing the geo object (no deprecation date has been set for the geo object yet) — the difference is that the coordinates object, in JSON, is now rendered correctly in GeoJSON.
+
+    >If a place_id is passed into the status update, then that place will be attached to the status. If no place_id was explicitly provided, but latitude and longitude are, we attempt to implicitly provide a place by calling geo/reverse_geocode.
+
+    >Users will have the ability, from their settings page, to remove all the geotags from all their tweets en masse. Currently we are not doing any automatic scrubbing nor providing a method to remove geotags from individual tweets.
+
+Resource URL
+https://api.twitter.com/1.1/statuses/update.json
+
+Resource Information：
+Response formats                     JSON
+Requires authentication?             Yes (user context only)
+Rate limited?                        Yes
+
+Parameters：
+(1)status<required>: 
+The text of your status update, typically up to 140 characters. URL encode as necessary. t.co link wrapping may affect character counts.There are some special commands in this field to be aware of. For instance, preceding a message with “D ” or “M ” and following it with a screen name can create a direct message to that user if the relationship allows for it.
+
+(2)in_reply_to_status_id <optional>:
+The ID of an existing status that the update is in reply to.
+Note:: This parameter will be ignored unless the author of the tweet this parameter references is mentioned within the status text. Therefore, you must include @username, where username is the author of the referenced tweet, within the update.
+
+(3)possibly_sensitive<optional>:
+If you upload Tweet media that might be considered sensitive content such as nudity, violence, or medical procedures, you should set this value to true. See Media setting and best practices for more context. Defaults to false.
+
+(4)lat<optional>:
+The latitude of the location this tweet refers to. This parameter will be ignored unless it is inside the range -90.0 to +90.0 (North is positive) inclusive. It will also be ignored if there isn’t a corresponding long parameter.
+
+(5)long<optional>:
+The longitude of the location this tweet refers to. The valid ranges for longitude is -180.0 to +180.0 (East is positive) inclusive. This parameter will be ignored if outside that range, if it is not a number, if geo_enabled is disabled, or if there not a corresponding lat parameter.
+
+(6)place_id<optional>:
+A place in the world.
+
+(7)display_coordinates<optional>:
+Whether or not to put a pin on the exact coordinates a tweet has been sent from.
+
+(8)trim_user<optional>:
+When set to either true, t or 1, each Tweet returned in a timeline will include a user object including only the status authors numerical ID. Omit this parameter to receive the complete user object.
+
+(9)media_ids <optional>:
+A list of media_ids to associate with the Tweet. You may include up to 4 photos or 1 animated GIF or 1 video in a Tweet. See Uploading Media for further details on uploading media.
+
+################################################################
+Example Request
+POST
+
+https://api.twitter.com/1.1/statuses/update.json?status=Maybe%20he%27ll%20finally%20find%20his%20keys.%20%23peterfalk
+
+ Example Result
+{
+  "coordinates": null,
+  "favorited": false,
+  "created_at": "Wed Sep 05 00:37:15 +0000 2012",
+  "truncated": false,
+  "id_str": "243145735212777472",
+  "entities": {
+    "urls": [
+ 
+    ],
+    "hashtags": [
+      {
+        "text": "peterfalk",
+        "indices": [
+          35,
+          45
+        ]
+      }
+    ],
+    "user_mentions": [
+ 
+    ]
+  },
+  "in_reply_to_user_id_str": null,
+  "text": "Maybe he'll finally find his keys. #peterfalk",
+  "contributors": null,
+  "retweet_count": 0,
+  "id": 243145735212777472,
+  "in_reply_to_status_id_str": null,
+  "geo": null,
+  "retweeted": false,
+  "in_reply_to_user_id": null,
+  "place": null,
+  "user": {
+    "name": "Jason Costa",
+    "profile_sidebar_border_color": "86A4A6",
+    "profile_sidebar_fill_color": "A0C5C7",
+    "profile_background_tile": false,
+    "profile_image_url": "http://a0.twimg.com/profile_images/1751674923/new_york_beard_normal.jpg",
+    "created_at": "Wed May 28 00:20:15 +0000 2008",
+    "location": "",
+    "is_translator": true,
+    "follow_request_sent": false,
+    "id_str": "14927800",
+    "profile_link_color": "FF3300",
+    "entities": {
+      "url": {
+        "urls": [
+          {
+            "expanded_url": "http://www.jason-costa.blogspot.com/",
+            "url": "http://t.co/YCA3ZKY",
+            "indices": [
+              0,
+              19
+            ],
+            "display_url": "jason-costa.blogspot.com"
+          }
+        ]
+      },
+      "description": {
+        "urls": [
+ 
+        ]
+      }
+    },
+    "default_profile": false,
+    "contributors_enabled": false,
+    "url": "http://t.co/YCA3ZKY",
+    "favourites_count": 883,
+    "utc_offset": -28800,
+    "id": 14927800,
+    "profile_image_url_https": "https://si0.twimg.com/profile_images/1751674923/new_york_beard_normal.jpg",
+    "profile_use_background_image": true,
+    "listed_count": 150,
+    "profile_text_color": "333333",
+    "protected": false,
+    "lang": "en",
+    "followers_count": 8760,
+    "time_zone": "Pacific Time (US & Canada)",
+    "profile_background_image_url_https": "https://si0.twimg.com/images/themes/theme6/bg.gif",
+    "verified": false,
+    "profile_background_color": "709397",
+    "notifications": false,
+    "description": "Platform at Twitter",
+    "geo_enabled": true,
+    "statuses_count": 5532,
+    "default_profile_image": false,
+    "friends_count": 166,
+    "profile_background_image_url": "http://a0.twimg.com/images/themes/theme6/bg.gif",
+    "show_all_inline_media": true,
+    "screen_name": "jasoncosta",
+    "following": false
+  },
+  "source": "<a href="//jason-costa.blogspot.com\"" rel="\"nofollow\"">My Shiny App</a>",
+  "in_reply_to_screen_name": null,
+  "in_reply_to_status_id": null
+}
+################################################################
+
+
+
+
+
+
+
+
+PS:
+>twitter API中一些对象的详细介绍 https://dev.twitter.com/overview/api/users
+
+/*********************************************************************************/
+词汇：
+latency
+n.延迟; 潜伏; 潜在因素
+
+coordinate
+n.坐标
+
+trim
+[英][trɪm][美][trɪm]
+vt.修剪; 整理; 装饰; 
+adj.整齐的，整洁的; 修长的; 苗条的; 
+n.整齐; 修剪; 健康状态; 装束; 
+vi.削减; 
+
+Omit
+omit
+[英][əˈmɪt][美][oˈmɪt]
+vt.省略; 遗漏; 删掉; 未（做）; 
+
+defects
+[英]['di:fekts][美]['di:fekts]
+n.缺点( defect的名词复数 ); （尤指对完善或完备所必需的）欠缺; 弱点; 污点; 
+
+/*********************************************************************************/
+
+
+
+

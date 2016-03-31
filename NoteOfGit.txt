@@ -1,0 +1,46 @@
+1、git diff
+git diff 命令不带参数表示查看所有modified的变化（即working directory中被track的文件的改变），unstaged的和已经staged的代码改变不会输出，查看已经staged的改变使用命令git diff --staged或者git diff --cached，该命令仅显示已经staged的代码（即staging area或者叫做index中自上次commit之后的改变）
+
+2、git commit 
+添加"-a"选项： Adding the -a option to the git commit command makes Git automatically stage every file that is already tracked before doing the commit, letting you skip the git add part
+
+--amend
+该选项用于对commit信息进行修改，若在后面直接使用-m选项并附带commit信息则会覆盖此前的commit信息，若不附带-m选项则会进入编辑上次commit信息的界面。若在commit后修改了working directory，并且提交到了staging area的话，使用 --amend会生成一次新的commit以及commit的校验和，并覆盖前一次commit。
+
+3、关于.gitignore无效的问题：
+.gitignore是针对的是untracked files，如果是已经被加入到staging area中的文件则无效，针对这种情况可以使用git rm --cached <XXX>来移除staging area中的不想被记录的文件，e.g. :git rm --cached *.class
+
+4、git reset
+git reset HEAD XXX: 将某一已经stage的文件修改为modified状态
+git checkout -- <fiels>: 忽略working directory中的改动，git checkout . 表示忽略working directory中所有的改变
+
+5、git remote
+git remote add [shortname] [url]添加远程连接
+git remote rename OldName NewName：重命名远程连接名
+git remote rm [shortname] 移除远程连接
+git ls-remote origin: 列出origin远程连接的信息，包括当前HEAD，各个分支的head
+git remote show origin： 显示远程连接origin的信息，包括了远程repository中的分支信息
+P. S. ：查看远程分支的可以用以上两种方式
+
+6、git tag
+git tag: 显示当前所有tag；
+git tag -l v1.8.*: 显示所有1.8系列下的tag
+git tag -a v1.0 -m "version 1.0"：为当前commit打上v1.0标签，并且附带相关的tag信息。
+git tag -a v1.2 cfceb02： 为某次commit添加tag
+git push origin [tagName]: 将某个tag推送到远程git仓库
+git push origin --tags: 将本地仓库中所有的tag推送到远程仓库
+
+7、git fetch
+git fetch [远程连接名] [远程分支名]： 从远程主机取回代码，但不自动合并到当前本地分支中，而是保存在 [远程连接]/[远程分支]中，例如origin/master，可以使用git checkout origin/master切换到该分支下查看远程主机上的代码变化，若想将远程分支代码与当前分支master进行合并把分支切换到master后使用git merge origin/master进行合并。
+
+8、git checkout
+git checkout -b newBranch: 新建分支newBranch并切换到newBranch，等同于git branch newBranch, git checkout newBranch这两条命令；
+
+
+9、git branch
+git branch dev：新建dev分支；
+git branch -d dev：删除dev分支；
+
+10、git log
+git log --decorate：查看git的log并显示当前的HEAD指向哪个commit;
+
