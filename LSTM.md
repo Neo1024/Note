@@ -1,5 +1,15 @@
 # LSTM
 
+Helpful blogs while writing notes here:
+
+http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-1-introduction-to-rnns/
+
+http://karpathy.github.io/2015/05/21/rnn-effectiveness/
+
+http://www.wildml.com/2015/10/recurrent-neural-network-tutorial-part-4-implementing-a-grulstm-rnn-with-python-and-theano/
+
+http://colah.github.io/posts/2015-08-Understanding-LSTMs/
+
 ## RNN Structure
 Basic RNN structure has the hidden states going through time steps and takes in input at each time step. 
 
@@ -15,7 +25,6 @@ The hidden states are updated at each time step by combining hidden states from 
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=s_t&space;=&space;softmax(U\cdot&space;x_t&space;&plus;&space;W\cdot&space;s_{t-1})" target="_blank"><img src="https://latex.codecogs.com/png.latex?s_t&space;=&space;softmax(U\cdot&space;x_t&space;&plus;&space;W\cdot&space;s_{t-1})" title="s_t = softmax(U\cdot x_t + W\cdot s_{t-1})" /></a>
 
-[latex code]: # (This is a comment)
  
 
 ## Stateful
