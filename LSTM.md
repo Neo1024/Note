@@ -15,7 +15,7 @@ The hidden states are updated at each time step by combining hidden states from 
 
 <a href="https://www.codecogs.com/eqnedit.php?latex=s_t&space;=&space;softmax(U\cdot&space;x_t&space;&plus;&space;W\cdot&space;s_{t-1})" target="_blank"><img src="https://latex.codecogs.com/png.latex?s_t&space;=&space;softmax(U\cdot&space;x_t&space;&plus;&space;W\cdot&space;s_{t-1})" title="s_t = softmax(U\cdot x_t + W\cdot s_{t-1})" /></a>
 
-[latex code]: # (s_t = softmax(U\cdot x_t + W\cdot s_{t-1}))
+[latex code]: # (This is a comment)
  
 
 ## Stateful
