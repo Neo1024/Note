@@ -27,9 +27,13 @@ Basic RNN structure has the hidden states going through time steps and takes in 
   
 The hidden states are updated at each time step by combining hidden states from last step and input at current step, 
 
-<a href="https://www.codecogs.com/eqnedit.php?latex=s_t&space;=&space;softmax(U\cdot&space;x_t&space;&plus;&space;W\cdot&space;s_{t-1})" target="_blank"><img src="https://latex.codecogs.com/png.latex?s_t&space;=&space;softmax(U\cdot&space;x_t&space;&plus;&space;W\cdot&space;s_{t-1})" title="s_t = softmax(U\cdot x_t + W\cdot s_{t-1})" /></a>
+<a href="https://www.codecogs.com/eqnedit.php?latex=s_t&space;=&space;softmax(U\cdot&space;x_t&space;&plus;&space;W\cdot&space;s_{t-1})" target="_blank"><img src="https://latex.codecogs.com/png.latex?s_t&space;=&space;softmax(U\cdot&space;x_t&space;&plus;&space;W\cdot&space;s_{t-1})" title="s_t = tanh(U\cdot x_t + W\cdot s_{t-1})" /></a>
 
 [\\]: # (This is a comment)
+
+RNN outputs one result **h<sub>t** at each time step by multiplying the hidden states at current step with the output weight vector **V**,
+  
+
 
 ## Stateful
 - Term define: batch_input_shap = (nb_samples, look_back/stepsize, nb_features)
