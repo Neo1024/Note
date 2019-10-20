@@ -52,8 +52,8 @@ LSTM mitigates the problem of vanishing gredient that ordinary RNN suffers from 
 -Output gate: <a href="https://www.codecogs.com/eqnedit.php?latex=o&space;=&space;sigmoid(U^o\cdot&space;x_t&space;&plus;&space;W^o\cdot&space;h_{t-1})" target="_blank"><img src="https://latex.codecogs.com/gif.latex?o&space;=&space;sigmoid(U^o\cdot&space;x_t&space;&plus;&space;W^o\cdot&space;h_{t-1})" title="o = sigmoid(U^o\cdot x_t + W^o\cdot h_{t-1})" /></a>
 
 Basically the three gates are calculated based on the hidden states at last time step and input at current time step in the same way but with different sets of weight vectors **U** and **W**. According to the name of the gates, input gate decides how much information is allowed to go through from the input at current time step, forget gate decides how much information from previous timesteps gets through while updating the cell states **C<sub>t**, output gate decides the output from current states. The cell states are updated every time step by first generating a cell states candidate based on the input and hidden states from last recurrence, 
-  
-<a href="https://www.codecogs.com/eqnedit.php?latex=\tilde{C_t}&space;=&space;tanh(U_c&space;\cdot&space;x_t&space;&plus;&space;W_c&space;\cdot&space;h_{t-1})" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\tilde{C_t}&space;=&space;tanh(U_c&space;\cdot&space;x_t&space;&plus;&space;W_c&space;\cdot&space;h_{t-1})" title="\tilde{C_t} = tanh(U_c \cdot x_t + W_c \cdot h_{t-1})" /></a>
+
+<a href="https://www.codecogs.com/eqnedit.php?latex=\tilde{C_t}&space;=&space;tanh(U^c&space;\cdot&space;x_t&space;&plus;&space;W^c&space;\cdot&space;h_{t-1})" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\tilde{C_t}&space;=&space;tanh(U^c&space;\cdot&space;x_t&space;&plus;&space;W^c&space;\cdot&space;h_{t-1})" title="\tilde{C_t} = tanh(U^c \cdot x_t + W^c \cdot h_{t-1})" /></a>
 
 Then the cell states at current time step are updated with the candidate cell states and the cell states from last recurrence, 
 
