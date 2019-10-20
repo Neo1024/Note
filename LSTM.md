@@ -63,6 +63,10 @@ Then hidden states at current time step are calculated based on **C<sub>t** and 
   
 <a href="https://www.codecogs.com/eqnedit.php?latex=h_t&space;=&space;o&space;\cdot&space;tanh(C_t)" target="_blank"><img src="https://latex.codecogs.com/gif.latex?h_t&space;=&space;o&space;\cdot&space;tanh(C_t)" title="h_t = o \cdot tanh(C_t)" /></a>
 
+The output at each time step is obtained by multiplying **h<sub>t** with another weight matrix, 
+  
+<a href="https://www.codecogs.com/eqnedit.php?latex=o_t&space;=&space;V&space;\cdot&space;h_t" target="_blank"><img src="https://latex.codecogs.com/gif.latex?o_t&space;=&space;V&space;\cdot&space;h_t" title="o_t = V \cdot h_t" /></a>
+
 ## Stateful
 - In Keras, set stateful=True in the fit() function allows the model to keep the states over training iteration unless reset manually. Stateful=True usually comes with shuffle=False so that the dependencies between samples can be utilized, passing through by the ongoing state. (http://philipperemy.github.io/keras-stateful-lstm/)
 - In stateless mode, the states are reset after each batch and there are batch_size states in paralell while training on a batch, meaning the there are 16 states being initialized, updated, and reset during one batch training if batch_size = 16. Therefore the states in stateless mode are totally independent from each other on a sample base. (https://stackoverflow.com/questions/43882796/when-does-keras-reset-an-lstm-state)
